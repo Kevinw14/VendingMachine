@@ -8,11 +8,11 @@ public class InventoryManagementSystem {
 
     public InventoryManagementSystem() {
         this.inventory = new VendingMachineList();
-        Item kitkat = new Item("Kit Kat", 1.00, 0, "1");
-        Item reeses = new Item("Reese's", 1.50, "2");
-        Item crunch = new Item("Crunch", 1.10, "3");
-        Item pretzels = new Item("Pretzels", 0.55, "4");
-        Item gum = new Item("Gum", 0.12, "5");
+        Item kitkat = new Item("Kit Kat", 100, 0, "1");
+        Item reeses = new Item("Reese's", 150, "2");
+        Item crunch = new Item("Crunch", 110, "3");
+        Item pretzels = new Item("Pretzels", 55, "4");
+        Item gum = new Item("Gum", 12, "5");
 
         inventory.add(kitkat);
         inventory.add(reeses);
@@ -25,7 +25,7 @@ public class InventoryManagementSystem {
         item.increaseQuantity(quantity);
     }
 
-    public void changePrice(Item item, double price) {
+    public void changePrice(Item item, int price) {
         item.setPrice(price);
     }
 
@@ -49,7 +49,7 @@ public class InventoryManagementSystem {
         String description = "";
         for (Interactive item: inventory) {
             Item convertedItem = (Item)item;
-            String formattedString = String.format("%s, %d In Stock, $%.2f\n", convertedItem.getName(), convertedItem.getQuantity(), convertedItem.getPrice());
+            String formattedString = String.format("%s, %d In Stock, $%.2f\n", convertedItem.getName(), convertedItem.getQuantity(), ((double)convertedItem.getPrice() / 100));
             description += formattedString;
         }
         return description;

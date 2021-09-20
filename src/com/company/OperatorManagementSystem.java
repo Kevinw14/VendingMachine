@@ -10,7 +10,7 @@ public class OperatorManagementSystem {
         this.password = password;
         Option restockItem = new Option("Restock Item", "1");
         Option changePriceOfItem = new Option("Change Price Of Item", "2");
-        Option machineInformation = new Option("Machine Information", "3");
+        Option machineInformation = new Option("Remove Change", "3");
         Option goBack = new Option("Go Back\n", "4");
 
         this.options = new VendingMachineList();
@@ -20,7 +20,8 @@ public class OperatorManagementSystem {
         options.add(goBack);
     }
 
-        public void changePrice() { }
+
+    public void changePrice() { }
 
     public String getPassword() {
         return password;

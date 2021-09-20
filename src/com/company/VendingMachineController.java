@@ -2,15 +2,17 @@ package com.company;
 
 import java.util.InputMismatchException;
 
-public class VendingMachineController implements VendingMachineDelegate, ChangeReserveDelegate {
+public class VendingMachineController implements VendingMachineDelegate {
 
     private final TextView textView;
     private final VendingMachine vendingMachine;
 
     public VendingMachineController(TextView textView) {
         this.textView = textView;
-        this.vendingMachine = new VendingMachine("Password");
-        this.vendingMachine.getChangeReserve().setDelegate(this);
+        InventoryManagementSystem ims = new InventoryManagementSystem();
+        OperatorManagementSystem oms = new OperatorManagementSystem("Password");
+        CoinReserve reserve = new CoinReserve();
+        this.vendingMachine = new VendingMachine(ims, oms, reserve);
         this.vendingMachine.setDelegate(this);
     }
 
@@ -104,15 +106,15 @@ public class VendingMachineController implements VendingMachineDelegate, ChangeR
         textView.display(machine);
     }
 
-    @Override
-    public void notValidOption(String option) {
-        textView.display("Not a valid option %s\n", option);
-    }
+//    @Override
+//    public void notValidOption(String option) {
+//        textView.display("Not a valid option %s\n", option);
+//    }
 
-    @Override
-    public void errorVendingMachineCantMakeChange() {
-        textView.display("\nVending Machine doesn't have enough change");
-    }
+//    @Override
+//    public void errorVendingMachineCantMakeChange() {
+//        textView.display("\nVending Machine doesn't have enough change");
+//    }
 
     @Override
     public String askForItem() {
@@ -120,25 +122,20 @@ public class VendingMachineController implements VendingMachineDelegate, ChangeR
         return item;
     }
 
-    @Override
-    public int askForRestockQuantity(Item item) {
-        int results = -1;
-
-        while (results < 0) {
-            try {
-                textView.display("How many would you like to add to the stock?");
-                results = textView.promptForInt();
-            } catch (InputMismatchException e) {
-                textView.display("Not a valid number");
-                textView.prompt("");
-            }
-        }
-        return results;
-    }
-
 //    @Override
-//    public void vendingMachineDidMakeChange(VendingMachine machine, double change) {
-//        textView.display("Your change is %.2f\n", change);
+//    public int askForRestockQuantity(Item item) {
+//        int results = -1;
+//
+//        while (results < 0) {
+//            try {
+//                textView.display("How many would you like to add to the stock?");
+//                results = textView.promptForInt("");
+//            } catch (InputMismatchException e) {
+//                textView.display("Not a valid number");
+//                textView.prompt("");
+//            }
+//        }
+//        return results;
 //    }
 
     @Override
@@ -155,24 +152,34 @@ public class VendingMachineController implements VendingMachineDelegate, ChangeR
         return option;
     }
 
+//    @Override
+//    public double askForPriceChange(Item item) {
+//        double results = -1;
+//
+//        while (results < 0) {
+//            try {
+//                textView.display("What do you want to change %s to. %s is currently at $%.2f\n", item.getName(), item.getName(), item.getPrice());
+//                results = textView.promptForDouble();
+//            } catch (InputMismatchException e) {
+//                textView.prompt("Invalid Characters Please Try Again\n");
+//            }
+//        }
+//
+//        return results;
+//    }
+
+//    @Override
+//    public void errorVendingMachineNotEnoughMoney() {
+//        textView.display("\nPlease enter enough money to make the purchase");
+//    }
+
     @Override
-    public double askForPriceChange(Item item) {
-        double results = -1;
-
-        while (results < 0) {
-            try {
-                textView.display("What do you want to change %s to. %s is currently at $%.2f\n", item.getName(), item.getName(), item.getPrice());
-                results = textView.promptForDouble();
-            } catch (InputMismatchException e) {
-                textView.prompt("Invalid Characters Please Try Again\n");
-            }
-        }
-
-        return results;
+    public void vendingMachineDidMakeChange(int change) {
+        textView.display("You received $%.2f in change\n", (double)change / 100);
     }
 
     @Override
-    public void errorVendingMachineNotEnoughMoney() {
-        textView.display("\nPlease enter enough money to make the purchase");
+    public void notValidOption(String option) {
+        textView.display("%s is not a valid option\n", option);
     }
 }

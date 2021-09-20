@@ -4,14 +4,14 @@ public class VendingMachine {
 
     private final InventoryManagementSystem ims;
     private final OperatorManagementSystem oms;
-    private ChangeReserve reserve;
+    private final CoinReserve reserves;
     private VendingMachineDelegate delegate;
     private boolean isFinished;
 
-    public VendingMachine(String password) {
-        this.ims = new InventoryManagementSystem();
-        this.oms = new OperatorManagementSystem(password);
-        this.reserve = new ChangeReserve();
+    public VendingMachine(InventoryManagementSystem ims, OperatorManagementSystem oms, CoinReserve reserves) {
+        this.ims = ims;
+        this.oms = oms;
+        this.reserves = reserves;
         this.isFinished = false;
     }
 
@@ -25,6 +25,8 @@ public class VendingMachine {
             } else if (machineCode.equals(oms.getPassword())) {
                 oms.setInOperatorMode(true);
                 operatorMode();
+            } else if (machineCode.equalsIgnoreCase("info")) {
+                delegate.vendingMachineInformation(this);
             } else if (ims.getInventory().contains(machineCode)) {
                 vend(machineCode);
             } else {
@@ -32,7 +34,6 @@ public class VendingMachine {
             }
         }
     }
-
 
     private void vend(String machineCode) {
         Item item = (Item) ims.getInventory().find(machineCode);
@@ -42,32 +43,36 @@ public class VendingMachine {
             int nickels = delegate.askForNickels();
             int pennies = delegate.askForPennies();
 
-            if (reserve.canMakeChange(quarters, dimes, nickels, pennies) &&
-                    reserve.canMakePurchase(quarters, dimes, nickels, pennies, item)) {
-////                double change = calculateChange(totalAmountProvided, item);
-                reserve.updateMoneyCollected(item.getPrice());
+            TemporaryStorage storage = new TemporaryStorage(quarters, dimes, nickels, pennies, item, reserves);
+
+            try {
+                int change = storage.processTransaction();
                 ims.decreaseQuantity(item);
-////                decreaseMoneyDeposits(change);
                 delegate.vendingMachineDidVendItem(item);
-////                delegate.vendingMachineDidMakeChange(this, change);
+                delegate.vendingMachineDidMakeChange(change);
+            } catch (NotEnoughChangeException e) {
+                System.out.println("Not enough change");
+
+            } catch (NotEnoughMoneyException e) {
+                System.out.println("Not enough money");
             }
         } else {
             delegate.errorMachineOutOfStock(item);
         }
     }
 
-    private void restockItem() {
-        delegate.showItems(ims.getInventory());
-        String machineCode = delegate.askForItem();
-
-        if (ims.getInventory().contains(machineCode)) {
-            Item item = (Item) ims.getInventory().find(machineCode);
-            int quantity = delegate.askForRestockQuantity(item);
-            ims.restockItem(item, quantity);
-        } else {
-            delegate.notValidItem(machineCode);
-        }
-    }
+//    private void restockItem() {
+//        delegate.showItems(ims.getInventory());
+//        String machineCode = delegate.askForItem();
+//
+//        if (ims.getInventory().contains(machineCode)) {
+//            Item item = (Item) ims.getInventory().find(machineCode);
+//            int quantity = delegate.askForRestockQuantity(item);
+//            ims.restockItem(item, quantity);
+//        } else {
+//            delegate.notValidItem(machineCode);
+//        }
+//    }
 
     private void operatorMode() {
         while (oms.isInOperatorMode()) {
@@ -75,10 +80,10 @@ public class VendingMachine {
             String option = delegate.operatorAskForOption(oms.getOptions());
             switch (option) {
                 case "1":
-                    restockItem();
+//                    restockItem();
                     break;
                 case "2":
-                    priceChange();
+//                    priceChange();
                     break;
                 case "3":
                     delegate.vendingMachineInformation(this);
@@ -92,26 +97,22 @@ public class VendingMachine {
         }
     }
 
-    private void priceChange() {
-        delegate.showItems(ims.getInventory());
-        String machineCode = delegate.askForItem();
-
-        if (ims.getInventory().contains(machineCode)) {
-            Item item = (Item) ims.getInventory().find(machineCode);
-            double price = delegate.askForPriceChange(item);
-            ims.changePrice(item, price);
-        } else {
-            delegate.notValidItem(machineCode);
-        }
-    }
+//    private void priceChange() {
+//        delegate.showItems(ims.getInventory());
+//        String machineCode = delegate.askForItem();
+//
+//        if (ims.getInventory().contains(machineCode)) {
+//            Item item = (Item) ims.getInventory().find(machineCode);
+//            double price = delegate.askForPriceChange(item);
+//            ims.changePrice(item, (int)(price * 100));
+//        } else {
+//            delegate.notValidItem(machineCode);
+//        }
+//    }
 
     public void setDelegate(VendingMachineDelegate delegate) {
         this.delegate = delegate;
         customerMode();
-    }
-
-    public ChangeReserve getChangeReserve() {
-        return this.reserve;
     }
 
     public OperatorManagementSystem getOms() {
@@ -124,13 +125,6 @@ public class VendingMachine {
 
     @Override
     public String toString() {
-        String description = String.format("Machine has\n" +
-                "%d quarters\n" +
-                "%d dimes\n" +
-                "%d nickels\n" +
-                "%d pennies\n" +
-                "collected $%.2f\n", reserve.getQuarters(), reserve.getDimes(), reserve.getNickels(), reserve.getPennies(), reserve.getMoneyCollected());
-        description += ims;
-        return description;
+        return reserves.toString() + "\n" + ims.toString();
     }
 }

@@ -2,18 +2,18 @@ package com.company;
 
 public class Item implements Interactive {
     private final String name;
-    private double price;
+    private int price;
     private int quantity;
     private String machineCode;
 
-    public Item(String name, double price, String machineCode) {
+    public Item(String name, int price, String machineCode) {
         this.name = name;
         this.price = price;
         this.quantity = 10;
         this.machineCode = machineCode;
     }
 
-    public Item(String name, double price, int quantity, String machineCode) {
+    public Item(String name, int price, int quantity, String machineCode) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -24,10 +24,10 @@ public class Item implements Interactive {
         return name;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
-    void setPrice(double price) {
+    void setPrice(int price) {
         this.price = price;
     }
 
@@ -44,6 +44,6 @@ public class Item implements Interactive {
 
     @Override
     public String toString() {
-        return String.format("%s: $%.2f", this.name, this.price);
+        return String.format("%s: $%.2f", this.name, ((double)this.price / 100));
     }
 }

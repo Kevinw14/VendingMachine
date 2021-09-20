@@ -9,10 +9,6 @@ public class Option implements Interactive {
         this.machineCode = machineCode;
     }
 
-    public String getName() {
-        return name;
-    }
-
     @Override
     public String getMachineCode() {
         return machineCode;

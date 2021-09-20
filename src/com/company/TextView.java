@@ -23,10 +23,6 @@ public class TextView {
         return numberScanner.nextInt();
     }
 
-    public int promptForInt() throws InputMismatchException {
-        return numberScanner.nextInt();
-    }
-
     public double promptForDouble() throws InputMismatchException {
         return numberScanner.nextDouble();
     }
