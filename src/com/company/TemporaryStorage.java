@@ -2,6 +2,9 @@ package com.company;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class TemporaryStorage {
 
     private final ArrayList<Coin> coins;
@@ -20,12 +23,23 @@ public class TemporaryStorage {
         addToTempStorage(Coin.PENNY, pennies);
     }
 
+    /**
+     *
+     * @param coin
+     * @param amount
+     */
     private void addToTempStorage(Coin coin, int amount) {
         for (int i = 0; i < amount; i++) {
             coins.add(coin);
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws NotEnoughMoneyException
+     * @throws NotEnoughChangeException
+     */
     public int processTransaction() throws NotEnoughMoneyException, NotEnoughChangeException {
         if (!(calculator.totalAmount(coins) >= item.getPrice())) {
             throw new NotEnoughMoneyException();
@@ -45,6 +59,11 @@ public class TemporaryStorage {
         return differenceFromUsedCoins + totalLeftOver;
     }
 
+    /**
+     *
+     * @param coins
+     * @return
+     */
     private int differenceFromUsedCoins(ArrayList<Coin> coins) {
         int total = 0;
         for (Coin coin : coins) {

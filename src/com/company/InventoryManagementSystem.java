@@ -1,10 +1,8 @@
 package com.company;
 
-import java.util.ArrayList;
-
 public class InventoryManagementSystem {
 
-    private VendingMachineList inventory;
+    private final VendingMachineList inventory;
 
     public InventoryManagementSystem() {
         this.inventory = new VendingMachineList();
@@ -19,14 +17,6 @@ public class InventoryManagementSystem {
         inventory.add(crunch);
         inventory.add(pretzels);
         inventory.add(gum);
-    }
-
-    public void restockItem(Item item, int quantity) {
-        item.increaseQuantity(quantity);
-    }
-
-    public void changePrice(Item item, int price) {
-        item.setPrice(price);
     }
 
     public boolean isItemInStock(Item item) {

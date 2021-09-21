@@ -1,5 +1,8 @@
 package com.company;
 
+/**
+ *
+ */
 public class Option implements Interactive {
     private String name;
     private String machineCode;

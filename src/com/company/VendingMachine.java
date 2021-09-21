@@ -1,5 +1,8 @@
 package com.company;
 
+/**
+ *
+ */
 public class VendingMachine {
 
     private final InventoryManagementSystem ims;
@@ -15,6 +18,9 @@ public class VendingMachine {
         this.isFinished = false;
     }
 
+    /**
+     *
+     */
     private void customerMode() {
         while (!isFinished) {
             delegate.showItems(ims.getInventory());
@@ -35,6 +41,10 @@ public class VendingMachine {
         }
     }
 
+    /**
+     *
+     * @param machineCode
+     */
     private void vend(String machineCode) {
         Item item = (Item) ims.getInventory().find(machineCode);
         if (ims.isItemInStock(item)) {
@@ -61,32 +71,47 @@ public class VendingMachine {
         }
     }
 
-//    private void restockItem() {
-//        delegate.showItems(ims.getInventory());
-//        String machineCode = delegate.askForItem();
-//
-//        if (ims.getInventory().contains(machineCode)) {
-//            Item item = (Item) ims.getInventory().find(machineCode);
-//            int quantity = delegate.askForRestockQuantity(item);
-//            ims.restockItem(item, quantity);
-//        } else {
-//            delegate.notValidItem(machineCode);
-//        }
-//    }
+    /**
+     *
+     */
+    private void restockItem() {
+        delegate.showItems(ims.getInventory());
+        String machineCode = delegate.chooseItem();
+        if (ims.getInventory().contains(machineCode)) {
+            Item item = (Item) ims.getInventory().find(machineCode);
+            oms.restockItem(item);
+        } else
+            delegate.notValidItem(machineCode);
+    }
 
+    /**
+     *
+     */
+    private void changePrice() {
+        delegate.showItems(ims.getInventory());
+        String machineCode = delegate.chooseItem();
+        if (ims.getInventory().contains(machineCode)) {
+            Item item = (Item) ims.getInventory().find(machineCode);
+            oms.changePrice(item);
+        } else
+            delegate.notValidItem(machineCode);
+    }
+
+    /**
+     *
+     */
     private void operatorMode() {
         while (oms.isInOperatorMode()) {
             delegate.showOperatorOptions(oms.getOptions());
             String option = delegate.operatorAskForOption(oms.getOptions());
             switch (option) {
                 case "1":
-//                    restockItem();
+                    restockItem();
                     break;
                 case "2":
-//                    priceChange();
+                    changePrice();
                     break;
                 case "3":
-                    delegate.vendingMachineInformation(this);
                     break;
                 case "4":
                     oms.setInOperatorMode(false);
@@ -97,30 +122,9 @@ public class VendingMachine {
         }
     }
 
-//    private void priceChange() {
-//        delegate.showItems(ims.getInventory());
-//        String machineCode = delegate.askForItem();
-//
-//        if (ims.getInventory().contains(machineCode)) {
-//            Item item = (Item) ims.getInventory().find(machineCode);
-//            double price = delegate.askForPriceChange(item);
-//            ims.changePrice(item, (int)(price * 100));
-//        } else {
-//            delegate.notValidItem(machineCode);
-//        }
-//    }
-
     public void setDelegate(VendingMachineDelegate delegate) {
         this.delegate = delegate;
         customerMode();
-    }
-
-    public OperatorManagementSystem getOms() {
-        return oms;
-    }
-
-    public InventoryManagementSystem getIms() {
-        return ims;
     }
 
     @Override

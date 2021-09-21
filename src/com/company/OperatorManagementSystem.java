@@ -1,10 +1,14 @@
 package com.company;
 
+/**
+ *
+ */
 public class OperatorManagementSystem {
 
-    private VendingMachineList options;
-    private String password;
+    private final VendingMachineList options;
+    private final String password;
     private boolean inOperatorMode;
+    private OperatorManagementSystemDelegate delegate;
 
     public OperatorManagementSystem(String password) {
         this.password = password;
@@ -20,21 +24,44 @@ public class OperatorManagementSystem {
         options.add(goBack);
     }
 
+    /**
+     *
+     * @param item
+     */
+    public void restockItem(Item item) {
+        int quantity = delegate.askForRestockQuantity();
+        if (item.getQuantity() + quantity <= 10) {
+            item.increaseQuantity(quantity);
+        } else {
+            delegate.restockQuantityOverThreshold();
+        }
+    }
 
-    public void changePrice() { }
+    /**
+     *
+     * @param item
+     */
+    public void changePrice(Item item) {
+        int price = (int)(delegate.askForPriceChange() * 100);
+        if (price >= 0) {
+            item.setPrice(price);
+        } else {
+            delegate.priceChangePriceNegative();
+        }
+    }
 
+    public void setDelegate(OperatorManagementSystemDelegate delegate) {
+        this.delegate = delegate;
+    }
     public String getPassword() {
         return password;
     }
-
     public boolean isInOperatorMode() {
         return inOperatorMode;
     }
-
     public void setInOperatorMode(boolean inOperatorMode) {
         this.inOperatorMode = inOperatorMode;
     }
-
     public VendingMachineList getOptions() {
         return options;
     }
