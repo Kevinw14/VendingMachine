@@ -1,7 +1,10 @@
 package com.company;
 
 /**
+ * Enumeration of a Coin and its value it holds.
  *
+ * @author Kevin Wood
+ * @version 1.0
  */
 public enum Coin {
     QUARTER(25),

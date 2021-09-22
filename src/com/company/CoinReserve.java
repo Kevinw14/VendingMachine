@@ -2,6 +2,9 @@ package com.company;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class CoinReserve {
     private final ArrayList<Coin> coins;
     private int moneyCollected;
@@ -10,9 +13,11 @@ public class CoinReserve {
         this.moneyCollected = 0;
         this.coins = new ArrayList<>();
         initializeCoinsReserves();
-        System.out.println("Initializing new reserve");
     }
 
+    /**
+     * Initializes the coin reserve with 10 of each coin
+     */
     private void initializeCoinsReserves() {
         for (Coin coin: Coin.values()) {
             for (int i = 0; i < 10; i++) {
@@ -21,6 +26,13 @@ public class CoinReserve {
         }
     }
 
+    /**
+     * Called to make sure the vending machine can give change back
+     * before proceeding further in the transaction
+     *
+     * @param amount The amount of change that needs to be given back
+     * @return boolean if machine can process the change with the given levels
+     */
     public boolean canMakeChange(int amount) {
         int amountRemaining = amount;
         int quarters = amountRemaining / 25;
@@ -36,6 +48,12 @@ public class CoinReserve {
                 pennies < numberOfCoinsInReserves(Coin.PENNY);
     }
 
+    /**
+     * Counts a coin that appears in the reserves
+     *
+     * @param coin The coin to count in the reserve
+     * @return The count of coins in the reserve
+     */
     private int numberOfCoinsInReserves(Coin coin) {
         int count = 0;
 
@@ -46,14 +64,31 @@ public class CoinReserve {
 
         return count;
     }
+
+    /**
+     * Adds the coin array to the over reserve array
+     *
+     * @param coins Adds the coins to the reserve array
+     */
     public void addCoinsToReserves(ArrayList<Coin> coins) {
         this.coins.addAll(coins);
     }
 
+    /**
+     * Called to update the overall money the vending machine has collected
+     * over the lifetime of the machine
+     *
+     * @param amount The amount that vending machine has collected
+     */
     public void updateMoneyCollected(int amount) {
         moneyCollected += amount;
     }
 
+    /**
+     * Given an amount goes through and removes the coins that make up that amount
+     *
+     * @param amount The amount that needs to be removed from the reserves
+     */
     public void removeCoinsFromReserves(int amount) {
         int amountRemaining = Math.abs(amount);
         int quarters = amountRemaining / 25;
@@ -69,6 +104,12 @@ public class CoinReserve {
         removeCoinFromReserve(Coin.PENNY, pennies);
     }
 
+    /**
+     * Removes a certain coin from the reserve n number of times
+     *
+     * @param coin The coin to remove from the reserve
+     * @param amount The amount of a certain coin to remove
+     */
     private void removeCoinFromReserve(Coin coin, int amount) {
         int count = 0;
         int i = 0;

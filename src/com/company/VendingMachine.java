@@ -1,25 +1,32 @@
 package com.company;
 
 /**
+ * VendingMachine encapsulates the data and methods needed to accurately
+ * process input from user and give correct item to user.
+ * Vending machine uses a loop to perform multiple transactions without exiting
+ * the interface.
  *
+ * @author Kevin Wood
+ * @version 1.0
  */
 public class VendingMachine {
 
     private final InventoryManagementSystem ims;
     private final OperatorManagementSystem oms;
-    private final CoinReserve reserves;
+    private CoinReserve reserve;
     private VendingMachineDelegate delegate;
     private boolean isFinished;
 
-    public VendingMachine(InventoryManagementSystem ims, OperatorManagementSystem oms, CoinReserve reserves) {
+    public VendingMachine(InventoryManagementSystem ims, OperatorManagementSystem oms, CoinReserve reserve) {
         this.ims = ims;
         this.oms = oms;
-        this.reserves = reserves;
+        this.reserve = reserve;
         this.isFinished = false;
     }
 
     /**
-     *
+     * Starts when application starts. Loops through showing items and asking for
+     * which item the user wants to purchase
      */
     private void customerMode() {
         while (!isFinished) {
@@ -42,8 +49,15 @@ public class VendingMachine {
     }
 
     /**
+     * Gets item the user wants to purchase. If item is in stock
+     * will ask user for quarters, dimes, nickels, and pennies.
+     * Stores money temporary to check if there is enough money, calculate
+     * change, decrease quantity, vend the item and give back change
      *
-     * @param machineCode
+     * Notifies user if item is out of stock, not enough money inserted, or
+     * not enough money to provide change
+     *
+     * @param machineCode The machine code of the item you want to purchase
      */
     private void vend(String machineCode) {
         Item item = (Item) ims.getInventory().find(machineCode);
@@ -53,7 +67,7 @@ public class VendingMachine {
             int nickels = delegate.askForNickels();
             int pennies = delegate.askForPennies();
 
-            TemporaryStorage storage = new TemporaryStorage(quarters, dimes, nickels, pennies, item, reserves);
+            TemporaryStorage storage = new TemporaryStorage(quarters, dimes, nickels, pennies, item, reserve);
 
             try {
                 int change = storage.processTransaction();
@@ -61,10 +75,10 @@ public class VendingMachine {
                 delegate.vendingMachineDidVendItem(item);
                 delegate.vendingMachineDidMakeChange(change);
             } catch (NotEnoughChangeException e) {
-                System.out.println("Not enough change");
+                delegate.notEnoughChange();
 
             } catch (NotEnoughMoneyException e) {
-                System.out.println("Not enough money");
+                delegate.notEnoughMoney();
             }
         } else {
             delegate.errorMachineOutOfStock(item);
@@ -72,7 +86,8 @@ public class VendingMachine {
     }
 
     /**
-     *
+     * Gets an item and restock quantity from operator
+     * to update an items stock
      */
     private void restockItem() {
         delegate.showItems(ims.getInventory());
@@ -85,7 +100,8 @@ public class VendingMachine {
     }
 
     /**
-     *
+     * Gets an item and price from operator
+     * to update an items price
      */
     private void changePrice() {
         delegate.showItems(ims.getInventory());
@@ -98,12 +114,14 @@ public class VendingMachine {
     }
 
     /**
-     *
+     * Called when operator successfully enters the vending machines password
+     * Loops through showing list of options to choose from
+     * When finished you can go back to customer mode
      */
     private void operatorMode() {
         while (oms.isInOperatorMode()) {
             delegate.showOperatorOptions(oms.getOptions());
-            String option = delegate.operatorAskForOption(oms.getOptions());
+            String option = delegate.operatorAskForOption();
             switch (option) {
                 case "1":
                     restockItem();
@@ -123,13 +141,21 @@ public class VendingMachine {
         }
     }
 
+    /**
+     * Sets the delegate and runs customer mode
+     * @param delegate object that conforms to the interface
+     */
     public void setDelegate(VendingMachineDelegate delegate) {
         this.delegate = delegate;
         customerMode();
     }
 
+    public void setReserves(CoinReserve reserve) {
+        this.reserve = reserve;
+    }
+
     @Override
     public String toString() {
-        return reserves.toString() + "\n" + ims.toString();
+        return reserve.toString() + "\n" + ims.toString();
     }
 }

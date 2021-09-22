@@ -3,7 +3,8 @@ package com.company;
 import java.util.ArrayList;
 
 /**
- *
+ * Class used to help keep track of coins inserted into the vending machine
+ * Processes coins and
  */
 public class TemporaryStorage {
 
@@ -24,9 +25,10 @@ public class TemporaryStorage {
     }
 
     /**
+     * Adds n number of coins of a certain type to the temporary storage array
      *
-     * @param coin
-     * @param amount
+     * @param coin The coin to add to the temporary storage
+     * @param amount The amount of one coin to add to the temporary storage
      */
     private void addToTempStorage(Coin coin, int amount) {
         for (int i = 0; i < amount; i++) {
@@ -35,10 +37,12 @@ public class TemporaryStorage {
     }
 
     /**
+     * Checks to make sure the vending machine can process the transaction and stores the money
+     * calculates change, and removes it from the reserve
      *
-     * @return
-     * @throws NotEnoughMoneyException
-     * @throws NotEnoughChangeException
+     * @return The change that is returned after processing the transaction
+     * @throws NotEnoughMoneyException Exception thrown when user doesn't insert enough money
+     * @throws NotEnoughChangeException Exception thrown when not enough change to complete the transaction
      */
     public int processTransaction() throws NotEnoughMoneyException, NotEnoughChangeException {
         if (!(calculator.totalAmount(coins) >= item.getPrice())) {
@@ -52,24 +56,11 @@ public class TemporaryStorage {
         ArrayList<Coin> usedCoins = calculator.findUsedCoins(coins, item);
         reserves.addCoinsToReserves(usedCoins);
         reserves.updateMoneyCollected(item.getPrice());
-        int differenceFromUsedCoins = differenceFromUsedCoins(usedCoins);
+        int differenceFromUsedCoins = calculator.differenceFromUsedCoins(usedCoins, item);
         reserves.removeCoinsFromReserves(differenceFromUsedCoins);
         int totalLeftOver = calculator.totalAmount(coins);
 
         return differenceFromUsedCoins + totalLeftOver;
-    }
-
-    /**
-     *
-     * @param coins
-     * @return
-     */
-    private int differenceFromUsedCoins(ArrayList<Coin> coins) {
-        int total = 0;
-        for (Coin coin : coins) {
-            total += coin.getDenominition();
-        }
-        return total - item.getPrice();
     }
 
     @Override

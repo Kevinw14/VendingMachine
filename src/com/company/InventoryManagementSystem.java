@@ -1,5 +1,8 @@
 package com.company;
 
+/**
+ *
+ */
 public class InventoryManagementSystem {
 
     private final VendingMachineList inventory;
@@ -19,29 +22,36 @@ public class InventoryManagementSystem {
         inventory.add(gum);
     }
 
+    /**
+     * Checks to make sure the item is in stock before going
+     * furthur in the transaction
+     *
+     * @param item The item the user chooses
+     * @return boolean if the item is in stock
+     */
     public boolean isItemInStock(Item item) {
-        if (item.getQuantity() > 0) {
-            return true;
-        }
-        return false;
+        return item.getQuantity() > 0;
     }
 
+    /**
+     * Called when a transaction is successful and decreases the inventory by one
+     * on the item bought
+     * @param item The item to decrease the quantity
+     */
     public void decreaseQuantity(Item item) {
         item.decreaseQuantity(1);
     }
-
     public VendingMachineList getInventory() {
         return inventory;
     }
-
     @Override
     public String toString() {
-        String description = "";
+        StringBuilder description = new StringBuilder();
         for (Interactive item: inventory) {
             Item convertedItem = (Item)item;
             String formattedString = String.format("%s, %d In Stock, $%.2f\n", convertedItem.getName(), convertedItem.getQuantity(), ((double)convertedItem.getPrice() / 100));
-            description += formattedString;
+            description.append(formattedString);
         }
-        return description;
+        return description.toString();
     }
 }

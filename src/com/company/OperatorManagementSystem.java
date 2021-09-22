@@ -1,7 +1,11 @@
 package com.company;
 
 /**
+ * Class designed to keep track of operations and the actions
+ * those operations perform
  *
+ * @author Kevin Wood
+ * @version 1.0
  */
 public class OperatorManagementSystem {
 
@@ -9,11 +13,11 @@ public class OperatorManagementSystem {
     private final String password;
     private boolean inOperatorMode;
     private OperatorManagementSystemDelegate delegate;
-    private CoinReserve reserves;
+    private CoinReserve reserve;
 
-    public OperatorManagementSystem(String password, CoinReserve reserves) {
+    public OperatorManagementSystem(String password, CoinReserve reserve) {
         this.password = password;
-        this.reserves = reserves;
+        this.reserve = reserve;
         Option restockItem = new Option("Restock Item", "1");
         Option changePriceOfItem = new Option("Change Price Of Item", "2");
         Option machineInformation = new Option("Remove Change", "3");
@@ -27,8 +31,9 @@ public class OperatorManagementSystem {
     }
 
     /**
+     * Asks the operator how much of an item to restock
      *
-     * @param item
+     * @param item Item chosen to be restocked
      */
     public void restockItem(Item item) {
         int quantity = delegate.askForRestockQuantity();
@@ -40,8 +45,9 @@ public class OperatorManagementSystem {
     }
 
     /**
+     * Asks the operator what the new items price should be
      *
-     * @param item
+     * @param item Item chosen to change the price
      */
     public void changePrice(Item item) {
         int price = (int)(delegate.askForPriceChange() * 100);
@@ -52,10 +58,14 @@ public class OperatorManagementSystem {
         }
     }
 
+    /**
+     * Removes the money collected since the last removal.
+     * Resets the reserves back to ten coins each
+     */
     public void removeChange() {
-        int moneyCollected = reserves.getMoneyCollected();
-        reserves = new CoinReserve();
-        delegate.moneyCollected(moneyCollected);
+        int moneyCollected = reserve.getMoneyCollected();
+        reserve = new CoinReserve();
+        delegate.moneyCollected(moneyCollected, reserve);
     }
 
     public void setDelegate(OperatorManagementSystemDelegate delegate) {
