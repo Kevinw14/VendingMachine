@@ -9,9 +9,11 @@ public class OperatorManagementSystem {
     private final String password;
     private boolean inOperatorMode;
     private OperatorManagementSystemDelegate delegate;
+    private CoinReserve reserves;
 
-    public OperatorManagementSystem(String password) {
+    public OperatorManagementSystem(String password, CoinReserve reserves) {
         this.password = password;
+        this.reserves = reserves;
         Option restockItem = new Option("Restock Item", "1");
         Option changePriceOfItem = new Option("Change Price Of Item", "2");
         Option machineInformation = new Option("Remove Change", "3");
@@ -48,6 +50,12 @@ public class OperatorManagementSystem {
         } else {
             delegate.priceChangePriceNegative();
         }
+    }
+
+    public void removeChange() {
+        int moneyCollected = reserves.getMoneyCollected();
+        reserves = new CoinReserve();
+        delegate.moneyCollected(moneyCollected);
     }
 
     public void setDelegate(OperatorManagementSystemDelegate delegate) {

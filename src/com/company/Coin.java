@@ -1,5 +1,8 @@
 package com.company;
 
+/**
+ *
+ */
 public enum Coin {
     QUARTER(25),
     DIME(10),

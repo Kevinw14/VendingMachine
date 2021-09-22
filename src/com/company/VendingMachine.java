@@ -112,6 +112,7 @@ public class VendingMachine {
                     changePrice();
                     break;
                 case "3":
+                    oms.removeChange();
                     break;
                 case "4":
                     oms.setInOperatorMode(false);

@@ -10,6 +10,7 @@ public class CoinReserve {
         this.moneyCollected = 0;
         this.coins = new ArrayList<>();
         initializeCoinsReserves();
+        System.out.println("Initializing new reserve");
     }
 
     private void initializeCoinsReserves() {
@@ -79,6 +80,10 @@ public class CoinReserve {
             }
             i++;
         }
+    }
+
+    public int getMoneyCollected() {
+        return moneyCollected;
     }
 
     @Override

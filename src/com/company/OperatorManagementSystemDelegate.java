@@ -28,4 +28,10 @@ public interface OperatorManagementSystemDelegate {
      *
      */
     void priceChangePriceNegative();
+
+    /**
+     *
+     * @param moneyCollected
+     */
+    void moneyCollected(int moneyCollected);
 }

@@ -12,9 +12,9 @@ public class VendingMachineController implements VendingMachineDelegate, Operato
     public VendingMachineController(TextView textView) {
         this.textView = textView;
         InventoryManagementSystem ims = new InventoryManagementSystem();
-        OperatorManagementSystem oms = new OperatorManagementSystem("Password");
-        oms.setDelegate(this);
         CoinReserve reserve = new CoinReserve();
+        OperatorManagementSystem oms = new OperatorManagementSystem("Password", reserve);
+        oms.setDelegate(this);
         VendingMachine vendingMachine = new VendingMachine(ims, oms, reserve);
         vendingMachine.setDelegate(this);
     }
@@ -237,5 +237,10 @@ public class VendingMachineController implements VendingMachineDelegate, Operato
             }
         }
         return results;
+    }
+
+    @Override
+    public void moneyCollected(int moneyCollected) {
+        textView.display("You collected $%.2f\n", (double) moneyCollected / 100);
     }
 }
