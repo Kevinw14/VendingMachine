@@ -12,6 +12,12 @@ import java.util.Iterator;
  */
 public class ChangeCalculator {
 
+    /**
+     * Calculates the total of all coins
+     *
+     * @param coins Coins used in the transaction
+     * @return The total added up from the coins
+     */
     public int totalAmount(ArrayList<Coin> coins) {
         int total = 0;
         for (Coin coin: coins) {

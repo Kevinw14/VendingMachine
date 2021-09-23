@@ -5,6 +5,9 @@ import java.util.ArrayList;
 /**
  * Class used to help keep track of coins inserted into the vending machine
  * Processes coins and
+ *
+ * @author Kevin Wood
+ * @version 1.0
  */
 public class TemporaryStorage {
 

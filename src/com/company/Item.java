@@ -11,7 +11,7 @@ public class Item implements Interactive {
     private final String name;
     private int price;
     private int quantity;
-    private String machineCode;
+    private final String machineCode;
 
     public Item(String name, int price, String machineCode) {
         this.name = name;

@@ -3,7 +3,11 @@ package com.company;
 import java.util.ArrayList;
 
 /**
+ * Class designed to keep track of the coins stored in the machine
+ * and used to make change for a user
  *
+ * @author Kevin Wood
+ * @version 1.0
  */
 public class CoinReserve {
     private final ArrayList<Coin> coins;

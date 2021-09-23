@@ -1,7 +1,11 @@
 package com.company;
 
 /**
+ * Class designed to keep track of items that are for sell
+ * and decrease or increase the stock of an item
  *
+ * @author Kevin Wood
+ * @version 1.0
  */
 public class InventoryManagementSystem {
 
@@ -9,7 +13,7 @@ public class InventoryManagementSystem {
 
     public InventoryManagementSystem() {
         this.inventory = new VendingMachineList();
-        Item kitkat = new Item("Kit Kat", 100, 0, "1");
+        Item kitkat = new Item("Kit Kat", 100, "1");
         Item reeses = new Item("Reese's", 150, "2");
         Item crunch = new Item("Crunch", 110, "3");
         Item pretzels = new Item("Pretzels", 55, "4");
@@ -41,6 +45,7 @@ public class InventoryManagementSystem {
     public void decreaseQuantity(Item item) {
         item.decreaseQuantity(1);
     }
+
     public VendingMachineList getInventory() {
         return inventory;
     }
